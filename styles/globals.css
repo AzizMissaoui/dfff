@@ -1,0 +1,105 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.West{
+  position: absolute;
+}
+
+.bb{
+  background-image: url("../public/bb.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.br{
+  background-image: url("../public/br.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+
+.bh{
+  background-image: url("../public/bh.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.bk{
+  background-image: url("../public/bk.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+
+.bb{
+  background-image: url("../public/bb.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.bq{
+  background-image: url("../public/bq.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.bp{
+  background-image: url("../public/bp.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.wb{
+  background-image: url("../public/wb.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.wr{
+  background-image: url("../public/wr.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.wh{
+  background-image: url("../public/wh.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.wk{
+  background-image: url("../public/wk.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.wq{
+  background-image: url("../public/wq.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+.wp{
+  background-image: url("../public/wp.png");
+  background-position: 50% 50%;
+  background-size: cover;
+  cursor:pointer;
+}
+
+
+
