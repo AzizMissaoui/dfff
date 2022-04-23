@@ -8,7 +8,6 @@ import { store } from '../Redux/store';
 
 
 
-import { useSelector, useDispatch } from 'react-redux'
 //ezzz
 const Main=styled.div`
 height: 100vh;

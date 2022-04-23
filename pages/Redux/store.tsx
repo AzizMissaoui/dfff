@@ -1,9 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from './createreducer';
+import Switchreducer from './createreducer';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    Switch: Switchreducer,
   },
 });
 
