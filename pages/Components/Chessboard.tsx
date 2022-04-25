@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
 import styled from "styled-components";
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useReducer, useEffect, useState } from "react";
 import Image from "next/image";
 import { useAppSelector, useAppDispatch } from '../Redux/hooks'
 import { store } from "../Redux/store";
+
 import { firstclickchange, secondclickchange,changeselected } from '../Redux/createreducer'
 import br from '../../public/br.png';
 import bh from '../../public/bh.png';
@@ -26,9 +27,10 @@ type Move = string;
 //wtf
 type Big = Array<ReactElement>;
 interface OnePiece {
-  currentpiece: String;
+  currentpiece: String | any ;
   clearw: boolean;
   clearb: boolean;
+  pos:Array<number>
 }
 
 const Chesboard = styled.div`
@@ -147,6 +149,13 @@ const ChessBoard: NextPage = () => {
     ],
   ]);
 
+  
+
+
+ 
+///zdad
+  
+
   const count = useAppSelector(state => state.Switch)
   const dispatch = useAppDispatch()
 
@@ -156,26 +165,18 @@ const ChessBoard: NextPage = () => {
     const state=store.getState();
     const firstclick=state.Switch.FirstClick;
     const secondclick=state.Switch.SecondClick; 
- 
-
-
     if(firstclick===true){
-
-
       if(Chessboard[pos[0]][pos[1]].currentpiece!=="none"){
       dispatch(changeselected(pos));
       dispatch(firstclickchange())
       dispatch(secondclickchange())
       }
-
       }else if(secondclick===true){
-
         const state=store.getState();
         const fakeboard=Chessboard;
-        
-
+        let tempdata=fakeboard[pos[0]][pos[1]].currentpiece;
         fakeboard[pos[0]][pos[1]].currentpiece=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece;
-
+        console.log(fakeboard[pos[0]][pos[1]].currentpiece=tempdata);
         setChessboard(fakeboard);
         console.log(Chessboard[pos[0]][pos[1]].currentpiece);
         dispatch(firstclickchange())
@@ -183,22 +184,24 @@ const ChessBoard: NextPage = () => {
       }
 
 
-
-   
-    
-
-    if (state)
-
- 
-  
   console.log(state.Switch)
   } 
 
  
-  const UpdateChessUI = () => {
+  const UpdateChessUI = (arraytorender:Array<Array<OnePiece>>) => {
+      };
+
+    
+  
+  console.log("render");
+
+
+
+  useEffect(()=>{
+    console.log("useeffect")
     let dummyui: Big = [];
     Chessboard.forEach((row) => {
-      row.forEach((piece) =>{
+      row.forEach((piece:OnePiece) =>{
       if (piece.currentpiece=="none"){
         dummyui.push(
           <Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} >
@@ -212,24 +215,14 @@ const ChessBoard: NextPage = () => {
           </Piece> 
         )}});
     });
-  
-    setChessUi(dummyui);
-  };
-  let dummyuii:Big=Chessui; 
-  
-  const memoizedCallback = useCallback(
-    () => {
-      UpdateChessUI();
-    },
-    [Chessboard],
-  );
-  useEffect(() => {
-    UpdateChessUI();
-    console.log("this  worked");
-    //ets
-  },[]);
+    setChessUi(dummyui)
+    //etsdza
 
-  return (<Chesboard  > {Chessui}</Chesboard>);
+  },[Chessboard])
+  
+
+
+  return (<Chesboard > {Chessui}</Chesboard>);
 };
 
 export default ChessBoard;
