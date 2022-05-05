@@ -4,7 +4,7 @@ import React, { ReactElement, useReducer, useEffect, useState } from "react";
 import Image from "next/image";
 import { useAppSelector, useAppDispatch } from '../Redux/hooks'
 import { store } from "../Redux/store";
-
+import Verification from "../Functions/Verification";
 import { firstclickchange, secondclickchange,changeselected } from '../Redux/createreducer'
 import br from '../../public/br.png';
 import bh from '../../public/bh.png';
@@ -70,6 +70,8 @@ const ChessBoard: NextPage = () => {
 
   const count = useAppSelector(state => state.Switch);
   const dispatch = useAppDispatch(); 
+
+  const [er,swtchoff]=useState(null);
 
   const [Chessboard, setChessboard] = useState([
     [
@@ -162,7 +164,7 @@ const ChessBoard: NextPage = () => {
     const state=store.getState();
     const firstclick=state.Switch.FirstClick;
     const secondclick=state.Switch.SecondClick; 
-    verifymove("rook",[5,6]);
+    
     if(firstclick===true){
       if(Chessboard[pos[0]][pos[1]].currentpiece!=="none"){
       dispatch(changeselected(pos));
@@ -173,7 +175,8 @@ const ChessBoard: NextPage = () => {
       }else if(secondclick===true){
         const state=store.getState();
         const fakeboard=Chessboard;
-        //move
+        const moves=Verification("horse",[3,4],[0,6]);
+        console.log(moves);
         fakeboard[pos[0]][pos[1]].currentpiece=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece;
         fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece="none"; 
         setChessboard(fakeboard);
@@ -186,47 +189,13 @@ const ChessBoard: NextPage = () => {
   } 
 
 
-  const verifymove=(piecetype:string,position:Array<number>)=>{
 
-    let moves:Array<Array<number>>=[];
-  if (piecetype==="rook"){
-      for (let i=0;i<=7;i++){
-        if((position[0]+i>=0) &&(position[0]+i<=7)){
-          if(position[0]+i!==position[0]&&position[1]===position[1]){
-            moves.push([position[0]+i,position[1]]);
-          }
-        }
-        if((position[0]-i>=0) &&(position[0]-i<=7)){
-          if(position[0]-i!==position[0]&&position[1]===position[1]){
-            moves.push([position[0]-i,position[1]]);
-          }
-         
-        }
-        if((position[1]+i>=0) && (position[1]+i<=7)){
-          if(position[0]===position[0]&&position[1]+i!==position[1]){
-            moves.push([position[0],position[1]+i]);
-          }
-        
-        }
-        if((position[1]-i>=0) && (position[1]-i<=7)){
-          if(position[0]===position[0]&&position[1]-i!==position[1]){
-            moves.push([position[0],position[1]-i]);
-          }
-          
-        }
-      }
-    }
 
-  if (piecetype==="pawn")    
-    console.log(moves);
 
-  }
 
 
   useEffect(()=>{
     console.log("worked");
-    
-
   },[Chessboard])
   
 
