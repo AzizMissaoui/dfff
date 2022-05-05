@@ -123,6 +123,7 @@ const Verification=(piecetype:string,position:Array<number>,NewPosition:Array<nu
     if((position[0]-2<8 && position[0]-2>=0) && (position[1]-1<8 && position[1]-1>=0)){
         moves.push([position[0]-2,position[1]-1]);
        }
+    //leftupperdown
     if((position[0]+1<8 && position[0]+1>=0) && (position[1]-2<8 && position[1]-2>=0)){
         moves.push([position[0]+1,position[1]-2]);
        }

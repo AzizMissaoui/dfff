@@ -20,3 +20,10 @@ a {
   position: absolute;
 }
 
+.highlighted{
+
+  background-image: url('../public/highlighted.png');
+
+
+}
+
