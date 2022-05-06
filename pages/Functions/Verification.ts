@@ -2,7 +2,7 @@
 
 type ArrayofNumbers = Array<Array<number>>
 
-const Verification=(piecetype:string,position:Array<number>,NewPosition:Array<number>)=>{
+const Verification=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>)=>{
     let isTheMoveRight=false;    
     let moves:ArrayofNumbers=[];
   if (piecetype==="rook"){
@@ -99,7 +99,6 @@ const Verification=(piecetype:string,position:Array<number>,NewPosition:Array<nu
               
             }
     }
-
   }
   if (piecetype==="horse"){
     //upperleftright

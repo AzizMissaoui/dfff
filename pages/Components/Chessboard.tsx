@@ -24,17 +24,17 @@ import greenx from "../../public/highlighted.png";
 
 
 
-type Move = string;
+type Move = "white" | "black" | "none";
 //wtf
 type Big = Array<ReactElement>;
 interface OnePiece {
-  currentpiece: String | any ;
+  currentpiece: string | any ;
   clearw: boolean;
   clearb: boolean;
   pos:Array<number>
   piecetype:String,
   highlighted:boolean,
-  type:String,
+  type:string,
 }
 
 
@@ -74,7 +74,7 @@ position: absolute;
 display: flex;
 align-items: center;
 justify-content: center;
-background-image: url(${greenx});
+background-image: url('../../public/highlighted.png');
 `
 
 
@@ -85,7 +85,7 @@ const ChessGame: NextPage = () => {
   const dispatch = useAppDispatch(); 
 
 
-
+  const [oldpieceposition,setoldposition]=useState(0);
   const [Chessboard, setChessboard] = useState([
     [
       { currentpiece: br, piecetype:"rook",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,0]},
@@ -181,26 +181,25 @@ const ChessGame: NextPage = () => {
     if(firstclick===true){
       if(Chessboard[pos[0]][pos[1]].currentpiece!=="none"){
         const piecetype=Chessboard[pos[0]][pos[1]].piecetype;
-        const moves=Verification(piecetype,[pos[0],pos[1]],[0,6]);
+        const color=Chessboard[pos[0]][pos[1]].type;
+        const moves=Verification(piecetype,color,[pos[0],pos[1]],[0,6]);
 
         let fakeboard=Chessboard;
 
        moves.forEach(element=>{
          fakeboard[element[0]][element[1]].highlighted=true;
        })
-
         console.log(moves);
-
-      
       dispatch(changeselected(pos));
       dispatch(firstclickchange())
       dispatch(secondclickchange())
+    
       
       }
       }else if(secondclick===true){
         const state=store.getState();
         let fakeboard=Chessboard;
-       
+        fakeboard.forEach(element=>{element.forEach(oneitem => oneitem.highlighted=false)});
         
         fakeboard[pos[0]][pos[1]].currentpiece=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece;
         fakeboard[pos[0]][pos[1]].piecetype=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].piecetype;
@@ -218,13 +217,8 @@ const ChessGame: NextPage = () => {
 
 
 
-
-
-
-
-  useEffect(()=>{
-    console.log("worked");
-  },[Chessboard])
+    console.log(Chessboard);
+  
   
 
 
