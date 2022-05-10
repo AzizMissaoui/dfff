@@ -79,6 +79,9 @@ display: flex;
 align-items: center;
 justify-content: center;
 background-image: url('../../public/highlighted.png');
+&:hover{
+  cursor: pointer;
+}
 `
 
 
@@ -250,9 +253,11 @@ const ChessGame: NextPage = () => {
       if(piece.highlighted===true){
         return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}  >
         <Image src={piece.currentpiece} alt="wr"  height={80} width={80}></Image>
-        <Highlighted><Image src={greenx} alt="wr"  height={40} width={40}></Image></Highlighted>
+        <Highlighted><Image src={greenx} alt="wr"  height={40} width={40}></Image>
         
-      </Piece> );
+        </Highlighted>
+        
+      </Piece>);
       }else{
         return(<Piece   key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}  >
       <Image src={piece.currentpiece} alt="wr"  height={80} width={80}></Image>
