@@ -27,24 +27,24 @@ const Verification=(piecetype:string,team:string,position:Array<number>,NewPosit
     switch (piecetype){
 
       case "rook":
-        moves=rook(piecetype,team,position,NewPosition,board);
+        moves=rook(team,position,NewPosition,board);
         break;
       case "bishop":
-        moves=bishop(piecetype,team,position,NewPosition,board);
+        moves=bishop(team,position,NewPosition,board);
         break;
       case "queen":
-        moves=queen(piecetype,team,position,NewPosition,board);
+        moves=queen(team,position,NewPosition,board);
         break;
       case "pawn":
-        moves=pawn(piecetype,team,position,NewPosition,board);
+        moves=pawn(team,position,NewPosition,board);
         break;
       case "horse":
-        moves=horse(piecetype,team,position,NewPosition,board);
+        moves=horse(team,position,NewPosition,board);
         break;
       case "king":
-        moves=king(piecetype,team,position,NewPosition,board);
+        moves=king(team,position,NewPosition,board);
         break;
-        
+
     }
 
    moves.map((element)=>{
@@ -53,7 +53,7 @@ const Verification=(piecetype:string,team:string,position:Array<number>,NewPosit
        }
    })
 
-        return moves;
+        return {moves,isTheMoveRight};
   }
 
 

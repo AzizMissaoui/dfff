@@ -47,6 +47,7 @@ const Chessui  = styled.div`
   border:3px solid white ;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
+  transform: rotate(180deg);
 
   @media (max-width: 720px) {
     height: 720px;
@@ -69,6 +70,7 @@ const Piece = styled.div`
   justify-content: center;
   font-size: 3rem;
   z-index: 2;
+  transform: rotate(180deg);
 `;
 
 const Highlighted= styled.div`
@@ -184,12 +186,12 @@ const ChessGame: NextPage = () => {
       if(Chessboard[pos[0]][pos[1]].currentpiece!=="none"){
         const piecetype=Chessboard[pos[0]][pos[1]].piecetype;
         const color=Chessboard[pos[0]][pos[1]].type;
-        const moves=Verification(piecetype,color,[pos[0],pos[1]],[0,6],Chessboard);
+        const verifciation=Verification(piecetype,color,[pos[0],pos[1]],[0,6],Chessboard);
         let fakeboard=Chessboard;
-       moves.forEach(element=>{
+        verifciation.moves.forEach(element=>{
          fakeboard[element[0]][element[1]].highlighted=true;
        })
-        console.log(moves);
+        
       dispatch(changeselected(pos));
       dispatch(firstclickchange())
       dispatch(secondclickchange())
@@ -199,17 +201,25 @@ const ChessGame: NextPage = () => {
       }else if(secondclick===true){
         const state=store.getState();
         let fakeboard=Chessboard;
+        
         //highlight clean
         fakeboard.forEach(element=>{element.forEach(oneitem => oneitem.highlighted=false)});
+        const piecetype=Chessboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].piecetype;
+        const color=Chessboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].type;
+        const verifciation=Verification(piecetype,color,state.Switch.SelecetedPiece,[pos[0],pos[1]],Chessboard);
+        console.log(verifciation.isTheMoveRight);
         //piece replace
+       if(verifciation.isTheMoveRight===true){
         fakeboard[pos[0]][pos[1]].currentpiece=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece;
         fakeboard[pos[0]][pos[1]].piecetype=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].piecetype;
         fakeboard[pos[0]][pos[1]].type=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].type;
         fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece="none"; 
         fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].piecetype="none"; 
-        fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].type="none"; 
-
+        fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].type="none";
         setChessboard(fakeboard);
+      } 
+
+        
         dispatch(firstclickchange())
         dispatch(secondclickchange())
       }

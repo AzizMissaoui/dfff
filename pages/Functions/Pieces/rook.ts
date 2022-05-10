@@ -9,7 +9,7 @@ interface OnePiece {
   highlighted:boolean,
   type:string,
 }
-const rook=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
+const rook=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
     let moves:ArrayofNumbers=[]
     let blockedtop=false;
     let blockedright=false;

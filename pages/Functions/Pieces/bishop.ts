@@ -12,7 +12,7 @@ interface OnePiece {
   firstMove:boolean,
 }
 
-const bishop=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
+const bishop=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
     let moves=[]
     let blockedtopright=false;
     let blockedtopleft=false;

@@ -12,7 +12,7 @@ interface OnePiece {
   firstMove:boolean,
 }
 
-const horse=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
+const horse=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
     let moves:ArrayofNumbers=[];
      //upperleftright
      if((position[0]+2<8 && position[0]+2>=0) && (position[1]+1<8 && position[1]+1>=0)){

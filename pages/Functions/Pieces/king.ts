@@ -10,7 +10,7 @@ interface OnePiece {
   type:string,
   firstMove:boolean,
 }
-const king=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
+const king=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
     let moves:ArrayofNumbers=[]
     let blocked=false;
    
