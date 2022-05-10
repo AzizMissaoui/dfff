@@ -32,9 +32,10 @@ interface OnePiece {
   clearw: boolean;
   clearb: boolean;
   pos:Array<number>
-  piecetype:String,
+  piecetype:string,
   highlighted:boolean,
   type:string,
+  firstMove:boolean,
 }
 
 
@@ -43,6 +44,7 @@ const Chessui  = styled.div`
   width: 768px;
   max-width: 100%;
   display: grid;
+  border:3px solid white ;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
 
@@ -86,86 +88,86 @@ const ChessGame: NextPage = () => {
 
 
   const [oldpieceposition,setoldposition]=useState(0);
-  const [Chessboard, setChessboard] = useState([
+  const [Chessboard, setChessboard] = useState<Array<Array<OnePiece>>>([
     [
-      { currentpiece: br, piecetype:"rook",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,0]},
-      { currentpiece: bh, piecetype:"horse",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,1]},
-      { currentpiece: bb, piecetype:"bishop",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,2] },
-      { currentpiece: bq, piecetype:"queen",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,3] },
-      { currentpiece: bk, piecetype:"king",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,4] },
-      { currentpiece: bb, piecetype:"bishop",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,5] },
-      { currentpiece: bh, piecetype:"horse",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,6] },
-      { currentpiece: br, piecetype:"rook",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,7]},
+      { currentpiece: br, piecetype:"rook",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,0],firstMove:true,},
+      { currentpiece: bh, piecetype:"horse",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,1],firstMove:true,},
+      { currentpiece: bb, piecetype:"bishop",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,2], firstMove:true,},
+      { currentpiece: bq, piecetype:"queen",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,3], firstMove:true,},
+      { currentpiece: bk, piecetype:"king",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,4], firstMove:true,},
+      { currentpiece: bb, piecetype:"bishop",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,5], firstMove:true,},
+      { currentpiece: bh, piecetype:"horse",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,6], firstMove:true,},
+      { currentpiece: br, piecetype:"rook",type:"black",highlighted:false,clearw: true, clearb: true , pos:[0,7],firstMove:true,},
     ],
     [
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,0] },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,1], },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,2], },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,3], },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,4], },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,5], },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,6], },
-      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,7],},
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,0] ,firstMove:true,},
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,1],firstMove:true, },
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,2],firstMove:true, },
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,3], firstMove:true,},
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,4], firstMove:true,},
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,5],firstMove:true, },
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,6],firstMove:true, },
+      { currentpiece: bp, piecetype:"pawn",type:"black",highlighted:false,clearw: true, clearb: true , pos:[1,7],firstMove:true,},
     ],
     [
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,0],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,1], },
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,2], },
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,3], },
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,4],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,5], },
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,6], },
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,7], },
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,0],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,1], firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,2], firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,3], firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,4],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,5],firstMove:true, },
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,6],firstMove:true, },
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[2,7],firstMove:true, },
     ],
     [
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,0],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,1],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,2],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,3],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,4],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,5],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,6],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,7],},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,0],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,1],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,2],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,3],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,4],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,5],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,6],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[3,7],firstMove:true,},
     ],
     [
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,0], },
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,1],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,2],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,3],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,4],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,5],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,6],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,7],},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,0], firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,1],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,2],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,3],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,4],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,5],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,6],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[4,7],firstMove:true,},
     ],
     [
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,0],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,1],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,2],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,3],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,4],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false, clearw: true, clearb: true , pos:[5,5],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,6],},
-      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,7],},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,0],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,1],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,2],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,3],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,4],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false, clearw: true, clearb: true , pos:[5,5],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,6],firstMove:true,},
+      { currentpiece: "none", piecetype:"none",type:"none",highlighted:false,clearw: true, clearb: true , pos:[5,7],firstMove:true,},
     ],
     [
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,0],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,1],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,2],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,3],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,4],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,5],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,6],},
-      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,7],},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,0],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,1],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,2],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,3],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,4],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,5],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,6],firstMove:true,},
+      { currentpiece: wp, piecetype:"pawn",type:"white",highlighted:false,clearw: true, clearb: true , pos:[6,7],firstMove:true,},
     ],
     [
-      { currentpiece: wr, piecetype:"rook",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,0],},
-      { currentpiece: wh, piecetype:"horse",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,1],},
-      { currentpiece: wb, piecetype:"bishop",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,2],},
-      { currentpiece: wq, piecetype:"queen",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,3],},
-      { currentpiece: wk, piecetype:"king",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,4],},
-      { currentpiece: wb, piecetype:"bishop",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,5],},
-      { currentpiece: wh, piecetype:"horse",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,6],},
-      { currentpiece: wr, piecetype:"rook",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,7],},
+      { currentpiece: wr, piecetype:"rook",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,0],firstMove:true,},
+      { currentpiece: wh, piecetype:"horse",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,1],firstMove:true,},
+      { currentpiece: wb, piecetype:"bishop",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,2],firstMove:true,},
+      { currentpiece: wq, piecetype:"queen",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,3],firstMove:true,},
+      { currentpiece: wk, piecetype:"king",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,4],firstMove:true,},
+      { currentpiece: wb, piecetype:"bishop",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,5],firstMove:true,},
+      { currentpiece: wh, piecetype:"horse",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,6],firstMove:true,},
+      { currentpiece: wr, piecetype:"rook",type:"white",highlighted:false,clearw: true, clearb: true , pos:[7,7],firstMove:true,},
       
     ],
   ]);
@@ -182,10 +184,8 @@ const ChessGame: NextPage = () => {
       if(Chessboard[pos[0]][pos[1]].currentpiece!=="none"){
         const piecetype=Chessboard[pos[0]][pos[1]].piecetype;
         const color=Chessboard[pos[0]][pos[1]].type;
-        const moves=Verification(piecetype,color,[pos[0],pos[1]],[0,6]);
-
+        const moves=Verification(piecetype,color,[pos[0],pos[1]],[0,6],Chessboard);
         let fakeboard=Chessboard;
-
        moves.forEach(element=>{
          fakeboard[element[0]][element[1]].highlighted=true;
        })
@@ -199,12 +199,15 @@ const ChessGame: NextPage = () => {
       }else if(secondclick===true){
         const state=store.getState();
         let fakeboard=Chessboard;
+        //highlight clean
         fakeboard.forEach(element=>{element.forEach(oneitem => oneitem.highlighted=false)});
-        
+        //piece replace
         fakeboard[pos[0]][pos[1]].currentpiece=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece;
         fakeboard[pos[0]][pos[1]].piecetype=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].piecetype;
+        fakeboard[pos[0]][pos[1]].type=fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].type;
         fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].currentpiece="none"; 
         fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].piecetype="none"; 
+        fakeboard[state.Switch.SelecetedPiece[0]][state.Switch.SelecetedPiece[1]].type="none"; 
 
         setChessboard(fakeboard);
         dispatch(firstclickchange())
@@ -217,7 +220,7 @@ const ChessGame: NextPage = () => {
 
 
 
-    console.log(Chessboard);
+   
   
   
 
@@ -237,7 +240,7 @@ const ChessGame: NextPage = () => {
       if(piece.highlighted===true){
         return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}  >
         <Image src={piece.currentpiece} alt="wr"  height={80} width={80}></Image>
-        <Highlighted></Highlighted>
+        <Highlighted><Image src={greenx} alt="wr"  height={40} width={40}></Image></Highlighted>
         
       </Piece> );
       }else{
