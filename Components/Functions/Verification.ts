@@ -5,22 +5,14 @@ import pawn from "./Pieces/pawn";
 import rook from "./Pieces/rook";
 import queen from "./Pieces/queen";
 import king from "./Pieces/king"
+import OnePiece from "../OnePiecetype"
 
 
 
 type ArrayofNumbers = Array<Array<number>>
-interface OnePiece {
-  currentpiece: string | any ;
-  clearw: boolean;
-  clearb: boolean;
-  pos:Array<number>
-  piecetype:String,
-  highlighted:boolean,
-  type:string,
-  firstMove:boolean,
-}
 
-const Verification=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
+
+const Verification=(piecetype:string,team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>):{moves:ArrayofNumbers,isTheMoveRight:boolean}=>{
     let isTheMoveRight=false;    
     let moves:ArrayofNumbers=[];
    

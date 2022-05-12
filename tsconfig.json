@@ -13,8 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+   
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/Tests/Main.test.ts", "pages/Tests/Rooktest.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "Tests/Main.test.ts", "Tests/Rooktest.ts"],
   "exclude": ["node_modules"]
 }

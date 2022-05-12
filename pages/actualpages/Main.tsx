@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import styled from 'styled-components';
-import ChessBoard from '../Components/Chessboard';
+import ChessBoard from '../../Components/MainComponent/Chessboard'
 import Image from 'next/image';
 
 import { Provider } from 'react-redux';
-import { store } from '../Redux/store';
+import { store } from '../../Components/Redux/store'
 
 
 
@@ -33,7 +33,6 @@ flex-direction: column;
 `
 
 const Header=styled.div`
-
 display:flex;
 justify-content: center;
 align-items: center;
@@ -42,7 +41,7 @@ width: 100%;
 height: fit-content;
 color: #a78bfa;
 font-size:3em;
-transform: rotate(180deg);
+
 `
 
 
@@ -54,7 +53,7 @@ const MainPage: NextPage = () => {
     return(
       <Provider store={store}>
     <Main>
-      <Header>ssehC</Header>
+      <Header>Chess</Header>
          
        <Wrapper>   <Header></Header><Image src="/chessboard.svg" height={768} width={768} className="West" alt='What'></Image></Wrapper> 
         <ChessBoard/>

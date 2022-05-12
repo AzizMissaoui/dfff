@@ -1,16 +1,5 @@
+import OnePiece from "../../OnePiecetype";
 
-
-type ArrayofNumbers = Array<Array<number>>
-interface OnePiece {
-  currentpiece: string | any ;
-  clearw: boolean;
-  clearb: boolean;
-  pos:Array<number>
-  piecetype:String,
-  highlighted:boolean,
-  type:string,
-  firstMove:boolean,
-}
 
 const bishop=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
     let moves=[]

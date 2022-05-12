@@ -1,19 +1,10 @@
 
 
-type ArrayofNumbers = Array<Array<number>>
-interface OnePiece {
-  currentpiece: string | any ;
-  clearw: boolean;
-  clearb: boolean;
-  pos:Array<number>
-  piecetype:String,
-  highlighted:boolean,
-  type:string,
-  firstMove:boolean,
-}
+
+import OnePiece from "../../OnePiecetype";
 
 const horse=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
-    let moves:ArrayofNumbers=[];
+    let moves=[];
      //upperleftright
      if((position[0]+2<8 && position[0]+2>=0) && (position[1]+1<8 && position[1]+1>=0)){
         if(board[position[0]+2][position[1]+1].type!==team){ moves.push([position[0]+2,position[1]+1]);}
