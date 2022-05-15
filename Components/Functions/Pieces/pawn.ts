@@ -16,7 +16,8 @@ const pawn=(team:string,position:Array<number>,NewPosition:Array<number>,board:A
         moves.push([position[0]-1,position[1]]);
     }
     if ((position[0]===6)){
-        if(board[position[0]-2][position[1]].type==="none"){moves.push([position[0]-2,position[1]]);} 
+        if(board[position[0]-2][position[1]].type==="none" && board[position[0]-1][position[1]].type==="none"){
+            moves.push([position[0]-2,position[1]]);} 
     }}
 
 
@@ -34,7 +35,8 @@ const pawn=(team:string,position:Array<number>,NewPosition:Array<number>,board:A
         moves.push([position[0]+1,position[1]]);
     }
     if (position[0]===1 ){
-        if(board[position[0]+2][position[1]].type==="none"){moves.push([position[0]+2,position[1]]);}   
+        if(board[position[0]+2][position[1]].type==="none" && board[position[0]+1][position[1]].type==="none")
+        {moves.push([position[0]+2,position[1]]);}   
     }}
     
 

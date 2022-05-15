@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import { Provider } from 'react-redux';
 import { store } from '../../Components/Redux/store'
+import { useEffect, useState } from 'react';
 
 
 
@@ -41,24 +42,53 @@ width: 100%;
 height: fit-content;
 color: #a78bfa;
 font-size:3em;
+flex-direction: column;
 
 `
 
 
+interface props{
+  handler :(a: string) => void,
+}
 
 
-const MainPage: NextPage = () => {
+const MainPage: NextPage<props> = (props) => {
 
- 
+ const [whoisturn,setwhoisturn]=useState<string>("white");
+
+ const arrayofrandoms=['p','h','k','r','b','q']
+
+ const whoisturnhandler=(arg:string):void=>{
+  setwhoisturn(arg);
+ }
+
+ useEffect(()=>{
+   if (whoisturn==="white"){
+    let newrandom=Math.ceil(Math.random()*6)-1;
+    let letter=arrayofrandoms[newrandom];
+    let word= "w"+letter;
+    
+     props.handler(word)}
+   else if(whoisturn==="black"){
+    let newrandom=Math.ceil(Math.random()*6)-1;
+   let letter=arrayofrandoms[newrandom];
+   let word= "b"+letter;
+
+    props.handler(word)}
+ },[whoisturn])
     return(
-      <Provider store={store}>
+    
     <Main>
-      <Header>Chess</Header>
-         
-       <Wrapper>   <Header></Header><Image src="/chessboard.svg" height={768} width={768} className="West" alt='What'></Image></Wrapper> 
-        <ChessBoard/>
+      <Header>
+        <div>Chess</div>
+        <div>its {whoisturn} &apos; s turn  </div>
+        </Header>
+        
+       <Wrapper>
+         <Header></Header><Image src="/chessboard.svg" height={768} width={768} className="West" alt='What'></Image></Wrapper> 
+        <ChessBoard turn={whoisturnhandler} />
        
-    </Main></Provider>
+    </Main>
   )
 }
 

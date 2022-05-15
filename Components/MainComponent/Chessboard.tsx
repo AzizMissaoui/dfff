@@ -72,9 +72,12 @@ cursor: pointer;
 
 `
 
+interface props{
+  turn :(a: string) => void,
+}
 
 
-const ChessGame: NextPage = () => {
+const ChessGame: NextPage<props> = (props) => {
     const [BlackTurn,Setblackturn]=useState<Boolean>(false);
     const [WhiteTurn,Setwhiteturn]=useState<Boolean>(true);
     const [firstclick,setfirstclick]=useState<Boolean>(true);
@@ -171,7 +174,6 @@ const checkforcheckormate=(posofking:Array<number>,colortocheck:string,chessboar
   let ischecked:boolean=false;
   let allmoves:Array<Array<number>>=[]
   let defensemoves:Array<Array<number>>=[]
-console.log(colortocheck);
 
   chessboardtouse.forEach((element)=>{
       element.forEach((oneitem) =>{
@@ -289,11 +291,9 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
         
       
       })});
-
         const piecetype=Chessboard[oldpieceposition[0]][oldpieceposition[1]].piecetype;
         const color=Chessboard[oldpieceposition[0]][oldpieceposition[1]].type;
         const verifciation=Verification(piecetype,color,oldpieceposition,[pos[0],pos[1]],Chessboard);
-       
         let preservedpiece={
           currentpiece: fakeboard[pos[0]][pos[1]].currentpiece,
           piecetype: fakeboard[pos[0]][pos[1]].piecetype,
@@ -313,7 +313,7 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
         if(BlackTurn===true){
           const result=checkforcheckormate(kingposition,"black",fakeboard);
 
-          console.log(kingposition,result)
+
           if(result===true){
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].currentpiece= fakeboard[pos[0]][pos[1]].currentpiece;
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].piecetype=fakeboard[pos[0]][pos[1]].piecetype;
@@ -329,7 +329,7 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
         }
         else if(WhiteTurn===true){
           const result=checkforcheckormate(kingposition,"white",fakeboard);
-          console.log(kingposition,result)
+         
           if(result===true){
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].currentpiece= fakeboard[pos[0]][pos[1]].currentpiece;
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].piecetype=fakeboard[pos[0]][pos[1]].piecetype;
@@ -342,23 +342,22 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
             Setwhiteturn(false);
           }
         }
-        
       } 
-
       setChessboard(fakeboard);
       setfirstclick(true);
       setsecondclick(false);} } 
 
 
+      useEffect(
+        ()=>{
+          if(BlackTurn){props.turn("black");console.log("changed to black")}
+        else if(WhiteTurn){props.turn("white");console.log("changed to white")}
+        },[WhiteTurn,BlackTurn]
+      )
 
-
- 
-  
-  
 
   return (<Chessui> {Chessboard.map((row) => { return(
-    row.map((piece:OnePiece) =>{
-    
+    row.map((piece:OnePiece) =>{ 
     if (piece.currentpiece=="none"){
       if(piece.highlighted){
       return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} > 
@@ -373,13 +372,10 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
       if(piece.highlighted===true){
         return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}  >
         <Image src={piece.currentpiece} alt="wr"  height={88} width={88}></Image>
-        <Highlighted><Image src={Xhighlight} alt="wr"  height={40} width={40}></Image>
-        
-        </Highlighted>
-        
+        <Highlighted><Image src={Xhighlight} alt="wr"  height={40} width={40}></Image></Highlighted>
       </Piece>);
       }else{
-        return(<Piece   key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}  >
+        return(<Piece   key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}   >
       <Image src={piece.currentpiece} alt="wr"  height={88} width={88}></Image>
     </Piece> );
       }
