@@ -50,7 +50,13 @@ const Chessui  = styled.div`
   }
 `;
 
+interface returned{
+  result:{
+    ischecked:boolean,
+    ischeckedevenafterdefense:boolean
+  },
 
+}
 
 
 const Piece = styled.div`
@@ -169,7 +175,7 @@ const ChessGame: NextPage<props> = (props) => {
 
 
 
-const checkforcheckormate=(posofking:Array<number>,colortocheck:string,chessboardtouse:Array<Array<OnePiece>>):boolean=>{
+const checkforcheckormate=(posofking:Array<number>,colortocheck:string,chessboardtouse:Array<Array<OnePiece>>)=>{
 
   let ischecked:boolean=false;
   let allmoves:Array<Array<number>>=[]
@@ -179,19 +185,15 @@ const checkforcheckormate=(posofking:Array<number>,colortocheck:string,chessboar
       element.forEach((oneitem) =>{
         if("black"===colortocheck ){
           if(oneitem.type==="white"){
-        let verifciationresult=Verification(oneitem.piecetype,'white',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse);
-        allmoves.push(...verifciationresult.moves);}
+        allmoves.push(...Verification(oneitem.piecetype,'white',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse).moves);}
         if(oneitem.type==="black" && oneitem.piecetype!=="king"){
-            let defense=Verification(oneitem.piecetype,'white',oneitem.pos,[0,0],chessboardtouse);
-            defensemoves.push(...defense.moves);}
+            defensemoves.push(...Verification(oneitem.piecetype,'white',oneitem.pos,[0,0],chessboardtouse).moves);}
             }
         else if(colortocheck==="white"){
           if(oneitem.type==="black"){
-          let verifciationresult=Verification(oneitem.piecetype,'black',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse);
-          allmoves.push(...verifciationresult.moves);}
+          allmoves.push(...Verification(oneitem.piecetype,'black',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse).moves);}
           else if(oneitem.type==="white" && oneitem.piecetype!=="king"){
-            let defense=Verification(oneitem.piecetype,'white',oneitem.pos,[0,0],chessboardtouse);
-            defensemoves.push(...defense.moves);
+            defensemoves.push(...Verification(oneitem.piecetype,'white',oneitem.pos,[0,0],chessboardtouse).moves )   ;
           }
         }
       })
@@ -204,13 +206,14 @@ const checkforcheckormate=(posofking:Array<number>,colortocheck:string,chessboar
           ischecked=true;
         }
       });
-
-   /*if(ischecked!==false){
-    let ischeckedevenafterdefense=false;
+      let ischeckedevenafterdefense=false;
+   if(ischecked!==false){
+     console.log(ischecked);
     let stillarray:Array<Array<number>>=[];
     defensemoves.forEach(pos =>{
-      chessboardtouse[pos[0]][pos[1]].piecetype="pawn";
-      chessboardtouse.forEach((element)=>{
+      let newarray=Object.assign({},chessboardtouse);
+      let propertyValues = Object.values(newarray);
+      propertyValues.forEach((element)=>{
         element.forEach((oneitem) =>{
           if("black"===colortocheck ){
             if(oneitem.type==="white"){
@@ -229,30 +232,15 @@ const checkforcheckormate=(posofking:Array<number>,colortocheck:string,chessboar
           }
         });
       }
-    );}*/
-   
+    );}
+    console.log("its a checkmate  :  ", ischeckedevenafterdefense);
 
 
-   
-       
-      
-
-      return ischecked;
+      return {ischecked,ischeckedevenafterdefense};
 }
 
 
 
-const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colortocheck:string,chessboardtouse:Array<Array<OnePiece>>):boolean=>{
-  let checkmate=false;
- 
-  moves.forEach(pos =>{
-    chessboardtouse[pos[0]][pos[1]].piecetype="pawn";
-    
-
-  })
-  return true
-
-}
 
 
   const clickhandlermove=(pos:Array<any>):void=>{
@@ -276,17 +264,17 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
 
       
       else if(secondclick===true){
-        const state=store.getState();
         let fakeboard=Chessboard;
         //highlight clean
-        let kingposition:Array<number>=[];
+        let whitekingposition:Array<number>=[];
+        let blackkingposition:Array<number>=[];
         fakeboard.forEach(element=>{element.forEach((oneitem) =>{oneitem.highlighted=false;
        
-          if (oneitem.type==="white" && oneitem.piecetype=="king" && WhiteTurn===true){
-            kingposition=oneitem.pos;
+          if (oneitem.type==="white" && oneitem.piecetype=="king"){
+            whitekingposition=oneitem.pos;
           }
-          else if (oneitem.type==="black" && oneitem.piecetype=="king" && BlackTurn===true ){
-            kingposition=oneitem.pos;
+          else if (oneitem.type==="black" && oneitem.piecetype=="king" ){
+            blackkingposition=oneitem.pos;
           }
         
       
@@ -294,7 +282,7 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
         const piecetype=Chessboard[oldpieceposition[0]][oldpieceposition[1]].piecetype;
         const color=Chessboard[oldpieceposition[0]][oldpieceposition[1]].type;
         const verifciation=Verification(piecetype,color,oldpieceposition,[pos[0],pos[1]],Chessboard);
-        let preservedpiece={
+        const preservedpiece={
           currentpiece: fakeboard[pos[0]][pos[1]].currentpiece,
           piecetype: fakeboard[pos[0]][pos[1]].piecetype,
           type: fakeboard[pos[0]][pos[1]].type,
@@ -307,37 +295,36 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
         fakeboard[oldpieceposition[0]][oldpieceposition[1]].currentpiece="none"; 
         fakeboard[oldpieceposition[0]][oldpieceposition[1]].piecetype="none"; 
         fakeboard[oldpieceposition[0]][oldpieceposition[1]].type="none";
-        if(piecetype=="king"){
-          kingposition=[pos[0],pos[1]];
-        }
+        if(piecetype=="king" && color==="white"){
+          whitekingposition=[pos[0],pos[1]];
+        }else if(piecetype=="king" && color==="black"){
+          blackkingposition=[pos[0],pos[1]];}
         if(BlackTurn===true){
-          const result=checkforcheckormate(kingposition,"black",fakeboard);
-
-
-          if(result===true){
+          const result=checkforcheckormate(blackkingposition,"black",fakeboard);
+          if(result.ischecked===true){
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].currentpiece= fakeboard[pos[0]][pos[1]].currentpiece;
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].piecetype=fakeboard[pos[0]][pos[1]].piecetype;
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].type=fakeboard[pos[0]][pos[1]].type;
            fakeboard[pos[0]][pos[1]].currentpiece=preservedpiece.currentpiece; 
            fakeboard[pos[0]][pos[1]].piecetype=preservedpiece.piecetype; 
            fakeboard[pos[0]][pos[1]].type=preservedpiece.type;
-          }else if (result===false){
+          }else if (result.ischecked===false){
             Setblackturn(false);
             Setwhiteturn(true);
-          }
-
+            }
+          
         }
         else if(WhiteTurn===true){
-          const result=checkforcheckormate(kingposition,"white",fakeboard);
-         
-          if(result===true){
+          const resultwhite=checkforcheckormate(whitekingposition,"white",fakeboard);
+          const resultblack=checkforcheckormate(blackkingposition,"black",fakeboard);
+          if(resultwhite.ischecked===true){
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].currentpiece= fakeboard[pos[0]][pos[1]].currentpiece;
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].piecetype=fakeboard[pos[0]][pos[1]].piecetype;
            fakeboard[oldpieceposition[0]][oldpieceposition[1]].type=fakeboard[pos[0]][pos[1]].type;
            fakeboard[pos[0]][pos[1]].currentpiece="none"; 
            fakeboard[pos[0]][pos[1]].piecetype="none"; 
            fakeboard[pos[0]][pos[1]].type="none";
-          }else if (result===false){
+          }else if (resultwhite.ischecked===false){
             Setblackturn(true);
             Setwhiteturn(false);
           }
@@ -360,22 +347,22 @@ const checkforcheckmate=(moves:Array<Array<number>>,posofking:Array<number>,colo
     row.map((piece:OnePiece) =>{ 
     if (piece.currentpiece=="none"){
       if(piece.highlighted){
-      return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} > 
+      return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos}  draggable={true}> 
          <Highlighted><Image src={Xhighlight} alt="wr"  height={40} width={40}></Image>
         
         </Highlighted>
         </Piece>);}else{
-          return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} > 
+          return(<Piece  key={Math.random()*100}  onClick={()=>{clickhandlermove(piece.pos)}}    data-piecepos={piece.pos}  draggable={true}  > 
           </Piece>);    }
     }
     else{
       if(piece.highlighted===true){
-        return(<Piece  key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}  >
+        return(<Piece  key={Math.random()*100}  onClick={()=>{clickhandlermove(piece.pos)}}   data-piecepos={piece.pos} style={{cursor:"pointer"}}draggable={true}  >
         <Image src={piece.currentpiece} alt="wr"  height={88} width={88}></Image>
         <Highlighted><Image src={Xhighlight} alt="wr"  height={40} width={40}></Image></Highlighted>
       </Piece>);
       }else{
-        return(<Piece   key={Math.random()*100} onClick={()=>{clickhandlermove(piece.pos)}} data-piecepos={piece.pos} style={{cursor:"pointer"}}   >
+        return(<Piece   key={Math.random()*100}  onClick={()=>{clickhandlermove(piece.pos)}}   data-piecepos={piece.pos} style={{cursor:"pointer"}} draggable={true}  >
       <Image src={piece.currentpiece} alt="wr"  height={88} width={88}></Image>
     </Piece> );
       }
