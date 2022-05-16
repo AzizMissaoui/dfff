@@ -34,6 +34,6 @@ const Verification=(piecetype:string,team:string,position:Array<number>,NewPosit
         isTheMoveRight=true;
        }
    })
-        return {moves,isTheMoveRight};
+        return {moves,isTheMoveRight,};
   }
   export default Verification;
