@@ -2,7 +2,7 @@ import OnePiece from "../../OnePiecetype";
 
 
 const queen=(team:string,position:Array<number>,NewPosition:Array<number>,board:Array<Array<OnePiece>>)=>{
-    let moves=[]
+    let moves:Array<Array<number>>=[];
     let blockedtopright=false;
     let blockedtopleft=false;
     let blockedbottomright=false;
@@ -95,6 +95,8 @@ const queen=(team:string,position:Array<number>,NewPosition:Array<number>,board:
           } 
         }
       }
+
+
     
 return moves;
 
