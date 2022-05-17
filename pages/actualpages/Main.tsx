@@ -37,7 +37,7 @@ const Header=styled.div`
 display:flex;
 justify-content: center;
 align-items: center;
-min-height: 15vh;
+min-height: 10vh;
 width: 100%;
 height: fit-content;
 color: #a78bfa;
@@ -80,8 +80,8 @@ const MainPage: NextPage<props> = (props) => {
     
     <Main>
       <Header>
-        <div>Chess</div>
-        <div>its {whoisturn} &apos; s turn  </div>
+    
+        <div>Turn : {whoisturn}   </div>
         </Header>
         
        <Wrapper>

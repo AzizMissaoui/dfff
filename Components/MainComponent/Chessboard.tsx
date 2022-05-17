@@ -3,7 +3,7 @@ import styled from "styled-components";
 import React, { useReducer, useEffect, useState } from "react";
 import Image from "next/image";
 /*import { useAppSelector, useAppDispatch } from '../Redux/hooks'*/
-import { cloneDeep } from "lodash";
+import { clone, cloneDeep } from "lodash";
 import Verification from "../Functions/Verification";
 /*import { firstclickchange, secondclickchange,changeselected } from '../Redux/createreducer'*/
 import br from '../../public/br.png';
@@ -74,6 +74,8 @@ const Piece = styled.div`
   justify-content: center;
   font-size: 3rem;
   z-index: 2;
+  height: 88px;
+  width: 88px;
   /*transform: rotate(180deg); to play black*/
 `;
 
@@ -109,14 +111,34 @@ color: white;
 padding: 1rem 2rem;
 border-radius:1rem;
 cursor: pointer;
-transition: color cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s, background-color cubic-bezier(0.075, 0.82, 0.165, 1) 1.5s ;
 &:hover{
   color: black;
   background-color: white;
 }
 `
 
+const Upgrade=styled.div<hidden>`
+position: absolute;
+display: flex;
 
+flex-direction: column;
+justify-content: center;
+align-items: center;
+height:768px ;
+width: 768px;
+max-width: 100%;
+
+visibility: ${props => props.visible};
+z-index: 100;
+gap: 2rem;
+`
+
+const  Piecestochoosefrom=styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  width: fit-content;
+
+`
 
 
 
@@ -128,6 +150,7 @@ const ChessGame: NextPage<props> = (props) => {
     const [firstclick,setfirstclick]=useState<Boolean>(true);
     const [secondclick,setsecondclick]=useState<Boolean>(false);
     const [oldpieceposition,setoldposition]=useState<Array<number>>([]);
+    const [upgradeposition,setupgradeposition]=useState<Array<number>>([]);
     const [Chessboard, setChessboard] = useState<Array<Array<OnePiece>>>([
     [
       { gridImage: br, piecetype:"rook",type:"black",highlighted:false,  pos:[0,0]},
@@ -211,8 +234,33 @@ const ChessGame: NextPage<props> = (props) => {
       
     ],
   ]);
+
+const [onpassantmove,setonpassantmove]=useState<Array<number>>([-1,-1]);
+  
   const [visibilityannoncer,setvisibilityforcheckmateannouncer]=useState<string>('hidden');
   const [winner,setwinner]=useState<string>("none");
+  const [upgradevisiblity,setupgradevisiblity]=useState<string>("hidden");
+
+  const blackupgrade=[
+    {gridimage:bq,piecetype:"queen"},
+    {gridimage:bh,piecetype:"horse"},
+    {gridimage:bb,piecetype:"bishop"},
+    {gridimage:br,piecetype:"rook"},
+  ];
+  const whiteupgrade=[
+    {gridimage:wq,piecetype:"queen"},
+    {gridimage:wh,piecetype:"horse"},
+    {gridimage:wb,piecetype:"bishop"},
+    {gridimage:wr,piecetype:"rook"},
+  ];
+
+
+  const [upgradearray,setupgrade]=useState([
+    {gridimage:wq,piecetype:"queen"},
+    {gridimage:wh,piecetype:"horse"},
+    {gridimage:wb,piecetype:"bishop"},
+    {gridimage:wr,piecetype:"rook"},
+  ]);
 const isitchecked=(posofking:Array<number>,colortocheck:string,chessboardtouse:Array<Array<OnePiece>>)=>{
 
   let ischecked:boolean=false;
@@ -242,22 +290,19 @@ const isitchecked=(posofking:Array<number>,colortocheck:string,chessboardtouse:A
   return ischecked;
 }
 
-
 const checkmatechecker=(posofking:Array<number>,colortocheck:string,chessboardtouse:Array<Array<OnePiece>>)=>{
   let defensemoves:Array<Array<number>>=[];
   let kingmoves:Array<Array<number>>=[];
   let defensecandefend:Array<boolean>=[];
   let checkmate=false;
 
+  //looping through the loop and checking defense moves and king moves for the color to check 
   chessboardtouse.forEach((element)=>{
       element.forEach((oneitem) =>{
-        if("black"===colortocheck && oneitem.piecetype==="king"){
-          if(oneitem.type==="black"){
+        if("black"===colortocheck && oneitem.piecetype==="king" && oneitem.type==="black"){
             kingmoves.push(...Verification(oneitem.piecetype,'black',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse).moves)
-          }}else if("white"===colortocheck && oneitem.piecetype==="king"){
-            if(oneitem.type==="black"){
-              kingmoves.push(...Verification(oneitem.piecetype,'white',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse).moves)}
-          }
+          }else if("white"===colortocheck && oneitem.piecetype==="king" && oneitem.type==="white"){
+            kingmoves.push(...Verification(oneitem.piecetype,'white',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse).moves)}
         if("black"===colortocheck && oneitem.piecetype!=="king"){
           if(oneitem.type==="black"){
         let verifciationresult=Verification(oneitem.piecetype,'black',oneitem.pos,[posofking[0],posofking[1]],chessboardtouse);
@@ -272,6 +317,8 @@ const checkmatechecker=(posofking:Array<number>,colortocheck:string,chessboardto
     }
       })});
 
+
+//trying every move if it can remove the check or not 
       defensemoves.forEach(pos =>{
         let thisdefensemovecandefend=true;
         let ClonedBoard=cloneDeep(chessboardtouse);
@@ -303,14 +350,14 @@ const checkmatechecker=(posofking:Array<number>,colortocheck:string,chessboardto
 
 
 
-
+// if there is one defense move (true) in the array  then no checkmate
       kingmoves.forEach(move=>{
         let ClonedBoard=cloneDeep(chessboardtouse);
-        ClonedBoard[move[0]][move[1]].piecetype==="king";
-        ClonedBoard[move[0]][move[1]].type===colortocheck;
-        ClonedBoard[posofking[0]][posofking[1]].piecetype==="none";
-        ClonedBoard[posofking[0]][posofking[1]].type==="none";
-        
+        ClonedBoard[move[0]][move[1]].piecetype="king";
+        ClonedBoard[move[0]][move[1]].type=colortocheck;
+        ClonedBoard[posofking[0]][posofking[1]].piecetype="none";
+        ClonedBoard[posofking[0]][posofking[1]].type="none";
+
         defensecandefend.push(!isitchecked(move,colortocheck,ClonedBoard));
 
       })
@@ -332,12 +379,7 @@ const checkmatechecker=(posofking:Array<number>,colortocheck:string,chessboardto
 return checkmate;
 }
 
-
-
-
-
-  const clickhandlermove=(pos:Array<any>):void=>{
-
+const clickhandlermove=(pos:Array<any>):void=>{
     if(firstclick===true){
         const verifciation=Verification(Chessboard[pos[0]][pos[1]].piecetype,Chessboard[pos[0]][pos[1]].type,[pos[0],pos[1]],[0,0],Chessboard);                                          
       if((Chessboard[pos[0]][pos[1]].type==="black" && BlackTurn===true) || (Chessboard[pos[0]][pos[1]].type==="white" && WhiteTurn===true)){
@@ -353,11 +395,7 @@ return checkmate;
        setChessboard(fakeboard);
       }  }
       }
-      
-
-
-      
-      else if(secondclick===true){
+       else if(secondclick===true){
         let fakeboard=cloneDeep(Chessboard);
         
         //highlight clean
@@ -371,12 +409,26 @@ return checkmate;
           else if (oneitem.type==="black" && oneitem.piecetype=="king" ){
             blackkingposition=oneitem.pos;
           }
-        
-      
       })});
         const piecetype=Chessboard[oldpieceposition[0]][oldpieceposition[1]].piecetype;
         const color=Chessboard[oldpieceposition[0]][oldpieceposition[1]].type;
         const verifciation=Verification(piecetype,color,oldpieceposition,[pos[0],pos[1]],Chessboard);
+
+        if(piecetype==="pawn" && BlackTurn ===true && color === "black" ){
+          const yes=Verification(piecetype,color,oldpieceposition,[pos[0],pos[1]],Chessboard);
+          if (yes.isTheMoveRight && pos[0]===7){
+            setupgradeposition([pos[0],pos[1]]);
+            setupgrade(blackupgrade);
+            setupgradevisiblity("visible");
+          }} else if (piecetype==="pawn"  && WhiteTurn===true && color ==="white"){
+            const yes=Verification(piecetype,color,oldpieceposition,[pos[0],pos[1]],Chessboard);
+            if (yes.isTheMoveRight && pos[0]===0){
+              setupgradeposition([pos[0],pos[1]]);
+              setupgrade(whiteupgrade)
+              setupgradevisiblity("visible");
+            }
+
+          }
         const preservedpiece={
           gridImage: fakeboard[pos[0]][pos[1]].gridImage,
           piecetype: fakeboard[pos[0]][pos[1]].piecetype,
@@ -411,7 +463,7 @@ return checkmate;
             Setblackturn(false);
             Setwhiteturn(true);
             }
-          
+
         }
         else if(WhiteTurn===true){
           const whiteischecked=isitchecked(whitekingposition,"white",fakeboard);
@@ -432,12 +484,21 @@ return checkmate;
           }
         }
       } 
+      setonpassantmove([-1,-1]);
+
+
+      if(Chessboard[oldpieceposition[0]][oldpieceposition[1]].piecetype==="pawn" &&  Chessboard[oldpieceposition[0]][oldpieceposition[1]].type==="white"
+      && oldpieceposition[0]-pos[0]===2){
+        setonpassantmove([pos[0],pos[1]]);
+      }else if(Chessboard[oldpieceposition[0]][oldpieceposition[1]].piecetype==="pawn" &&  Chessboard[oldpieceposition[0]][oldpieceposition[1]].type==="white"
+      && pos[0]-oldpieceposition[0]===2){
+        setonpassantmove([pos[0],pos[1]]);
+      }
       setChessboard(fakeboard);
       setfirstclick(true);
       setsecondclick(false);} } 
 
-
-      const PlayAgainHandler=()=>{
+const PlayAgainHandler=()=>{
         setwinner("none");
         setvisibilityforcheckmateannouncer("hidden");
         setChessboard([
@@ -528,8 +589,16 @@ return checkmate;
 
       }
 
-/*eslint-disable */
 
+
+      const upgradehandler=(piecetype:string,image:any)=>{
+        let chessboarde=cloneDeep(Chessboard);
+        chessboarde[upgradeposition[0]][upgradeposition[1]].piecetype=piecetype ;
+        chessboarde[upgradeposition[0]][upgradeposition[1]].gridImage=image ;
+        setupgradevisiblity('hidden');
+        setChessboard(chessboarde);
+      }
+/*eslint-disable */ 
       useEffect(
         ()=>{
           if(BlackTurn){props.turn("black");}
@@ -544,6 +613,12 @@ return checkmate;
             setvisibilityforcheckmateannouncer("visible");
           } 
         },[winner]
+      )
+
+      useEffect(
+        ()=>{
+
+        },[]
       )
 /*eslint-enable */
 
@@ -580,6 +655,20 @@ return checkmate;
   <PlayAgainButton onClick={()=>{PlayAgainHandler()}}>Go Again?</PlayAgainButton>
   
   </CheckmateAnnouncement>
+  
+    
+  <Upgrade visible={upgradevisiblity}>
+    <Piecestochoosefrom>
+      {
+       upgradearray.map((element)=>{
+        return (<Piece key={Math.random()*100} onClick={()=>{upgradehandler(element.piecetype,element.gridimage)}}    style={{cursor:"pointer",border:"3px solid black"}} draggable={true}  >
+        <Image src={element.gridimage} alt="wr"  height={88} width={88}></Image>
+      </Piece>);
+       })
+      }
+    </Piecestochoosefrom>
+  </Upgrade>
+  
   </Chessui>);
 };
 
