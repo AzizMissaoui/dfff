@@ -7,7 +7,7 @@ nonon
 ```bash
 npm run dev//res
 # or
-yarn dev
+yarn devsasadza
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
